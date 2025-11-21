@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Adhwa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Envelope Animation */
+        .envelope-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            transition: opacity 0.5s ease-out;
+        }
+
+        .envelope-wrapper.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope {
+            position: relative;
+            width: 350px;
+            height: 230px;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .envelope:hover:not(.open) {
+            transform: translateY(-10px);
+        }
+
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #f5f5f5 0%, #e8e8e8 100%);
+            border-radius: 10px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            border: 2px solid #d0d0d0;
+        }
+
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, #f5f5f5 0%, #e8e8e8 100%);
+            border-radius: 0 0 10px 10px;
+            border: 2px solid #d0d0d0;
+            border-top: none;
+            z-index: 3;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 175px solid transparent;
+            border-right: 175px solid transparent;
+            border-top: 115px solid #d32f2f;
+            border-bottom: 0px solid transparent;
+            transform-origin: top center;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 4;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            border-top-color: #b71c1c;
+        }
+
+        .envelope-seal {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: #ffd700;
+            border-radius: 50%;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.8s ease;
+        }
+
+        .envelope.open .envelope-seal {
+            opacity: 0;
+            transform: translateX(-50%) scale(0);
+        }
+
+        .envelope-letter {
+            position: absolute;
+            top: 30px;
+            left: 25px;
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(to bottom, #ffffff 0%, #fafafa 100%);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .envelope.open .envelope-letter {
+            transform: translateY(-150px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .envelope-letter h3 {
+            color: #2c3e50;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .envelope-letter p {
+            color: #7f8c8d;
+            font-size: 1em;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .letter-decoration {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            pointer-events: none;
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.1em;
+            animation: pulse 2s infinite;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Main Content */
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease-out;
+            margin: 20px auto;
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            color: #34495e;
+            line-height: 1.8;
+            margin: 10px 0;
+            font-size: 1.05em;
+        }
+
+        .nickname-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .nickname {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            color: #3498db;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #ecf0f1;
+        }
+
+        .nickname:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                align-items: flex-start;
+                padding-top: 30px;
+                padding-bottom: 30px;
+            }
+
+            .envelope {
+                width: 300px;
+                height: 197px;
+            }
+
+            .envelope-flap {
+                border-left: 150px solid transparent;
+                border-right: 150px solid transparent;
+                border-top: 98px solid #d32f2f;
+            }
+
+            .envelope-letter {
+                width: 260px;
+                height: 170px;
+                padding: 20px;
+                left: 20px;
+                top: 27px;
+            }
+
+            .envelope-letter h3 {
+                font-size: 1.4em;
+            }
+
+            .envelope-letter p {
+                font-size: 0.95em;
+            }
+
+            .envelope-seal {
+                top: 85px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3em;
+            }
+
+            .click-hint {
+                font-size: 1em;
+                bottom: -70px;
+            }
+
+            .container {
+                padding: 30px 20px;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                font-size: 1em;
+                margin-bottom: 25px;
+            }
+
+            .section {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            .section h2 {
+                font-size: 1.3em;
+                margin-bottom: 12px;
+            }
+
+            .message {
+                font-size: 1em;
+                line-height: 1.7;
+            }
+
+            .quote-box {
+                padding: 20px;
+                font-size: 1em;
+                margin: 20px 0;
+            }
+
+            .nickname-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .nickname {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                align-items: flex-start;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+
+            .envelope {
+                width: 260px;
+                height: 171px;
+            }
+
+            .envelope-flap {
+                border-left: 130px solid transparent;
+                border-right: 130px solid transparent;
+                border-top: 85px solid #d32f2f;
+            }
+
+            .envelope-letter {
+                width: 220px;
+                height: 145px;
+                padding: 15px;
+                left: 20px;
+                top: 26px;
+            }
+
+            .envelope-letter h3 {
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+
+            .envelope-letter p {
+                font-size: 0.85em;
+            }
+
+            .envelope-seal {
+                top: 75px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+
+            .click-hint {
+                font-size: 0.9em;
+                bottom: -65px;
+            }
+
+            .container {
+                padding: 25px 15px;
+                margin: 0 auto;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+            }
+
+            .section {
+                padding: 18px;
+                margin: 18px 0;
+            }
+
+            .section h2 {
+                font-size: 1.2em;
+            }
+
+            .message {
+                font-size: 0.95em;
+            }
+
+            .quote-box {
+                padding: 18px;
+                font-size: 0.95em;
+            }
+
+            .nickname-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .nickname {
+                padding: 10px 8px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .envelope {
+                width: 240px;
+                height: 158px;
+            }
+
+            .envelope-flap {
+                border-left: 120px solid transparent;
+                border-right: 120px solid transparent;
+                border-top: 79px solid #d32f2f;
+            }
+
+            .envelope-letter {
+                width: 200px;
+                height: 130px;
+                padding: 12px;
+                left: 20px;
+                top: 24px;
+            }
+
+            .envelope-letter h3 {
+                font-size: 1.1em;
+            }
+
+            .envelope-letter p {
+                font-size: 0.8em;
+            }
+
+            .envelope-seal {
+                top: 70px;
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .container {
+                padding: 20px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Envelope Animation -->
+    <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope" id="envelope" onclick="openEnvelope()">
+            <div class="envelope-back"></div>
+            <div class="envelope-front"></div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-seal">💌</div>
+            <div class="envelope-letter">
+                <div class="letter-decoration"></div>
+                <h3>Untuk Adhwa</h3>
+                <p>Klik untuk membuka</p>
+            </div>
+            <div class="click-hint">✨ Klik untuk membuka surat ✨</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent">
+    <h1>Untuk Wawa</h1>
+    <p class="subtitle">Beberapa hal yang ingin aku sampaikan</p>
+
+    <div class="section">
+        <h2>Tentang Kamu</h2>
+        <p class="message">Halo Wawa, boneka yang aku berikan ini namanya Ais. Semoga dia bisa menemanimu setiap waktu.</p>
+        <p class="message">Besok adalah hari terakhirku di sini. Terima kasih sudah menjadi teman yang menyenangkan selama ini.</p>
+        <p class="message">Sebenarnya aku ingin lebih sering ngobrol atau chat denganmu. Tapi mungkin aku agak grogi dan bingung juga, karena ini pertama kalinya aku bertemu dan berbicara dengan orang sepertimu.</p>
+        <p class="message">Sejak yang kamu katakan kemarin, aku jadi bingung harus berbuat apa. Itu pengalaman pertamaku seperti itu 😅 Padahal aku sempat ingin mengajakmu jalan.</p>
+    </div>
+
+    <div class="quote-box">
+        "Kehadiranmu yang singkat membawa kebahagiaan sederhana tapi sangat bermakna"
+    </div>
+
+    <div class="section">
+        <h2>Pesan Terakhir</h2>
+        <p class="message">Terima kasih sudah menjadi dirimu yang luar biasa. Jangan pernah berubah, karena kamu sudah sempurna apa adanya.</p>
+        <p class="message">Terima kasih juga sudah menjadi temanku, meskipun hanya sebentar.</p>
+        <p class="message">Jaga Ais dengan baik ya. Dia adalah simbol pertemanan kita. Tapi kalau kamu merasa tidak nyaman, tidak apa-apa untuk memberikannya pada orang lain, jangan mengembalikannya kepadaku.</p>
+        <p class="message">Mungkin di lain waktu nanti kita bisa bertemu kembali. Sampai Jumpa.</p> 
+    </div>
+</div>
+
+    <audio id="audioPlayer" loop></audio>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        const envelope = document.getElementById('envelope');
+        const mainContent = document.getElementById('mainContent');
+        
+        // Path MP3
+        const musicURL = 'TULUS - Hati-Hati di Jalan.mp3';
+        audioPlayer.src = musicURL;
+        audioPlayer.volume = 0.5;
+
+        function openEnvelope() {
+            // Prevent multiple clicks
+            if (envelope.classList.contains('open')) return;
+            
+            // Animasi buka amplop
+            envelope.classList.add('open');
+            envelope.style.cursor = 'default';
+            
+            // Setelah 1.2 detik, mulai musik dan tampilkan konten
+            setTimeout(() => {
+                // Mulai musik
+                audioPlayer.play().catch(err => {
+                    console.log('Autoplay prevented:', err);
+                });
+                
+                // Sembunyikan amplop dengan smooth fade
+                envelopeWrapper.classList.add('hide');
+                
+                // Tampilkan konten utama
+                setTimeout(() => {
+                    mainContent.classList.add('show');
+                }, 200);
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
