@@ -24,6 +24,7 @@
             align-items: center;
             padding: 40px 20px;
             color: #2d3436;
+            overflow-x: hidden;
         }
 
         .envelope-wrapper {
@@ -164,6 +165,8 @@
             transform: translateY(20px);
             transition: all 0.6s ease;
             line-height: 1.8;
+            position: relative;
+            z-index: 1;
         }
 
         .container.show {
@@ -233,6 +236,152 @@
             margin: 40px 0;
         }
 
+        /* ========== FLOATING BONEKA AIS ========== */
+        .floating-bear {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: #8b7355;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            animation: floatBear 3s ease-in-out infinite;
+        }
+
+        .floating-bear.show {
+            display: flex;
+        }
+
+        .floating-bear:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .floating-bear:active {
+            animation: jump 0.5s ease;
+        }
+
+        @keyframes floatBear {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes jump {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-30px) rotate(-10deg); }
+            50% { transform: translateY(-40px) rotate(0deg); }
+            75% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        .bear-speech {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            font-size: 0.9em;
+            font-family: 'Georgia', serif;
+            color: #2d3436;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 9997;
+            max-width: 200px;
+        }
+
+        .bear-speech.show {
+            opacity: 1;
+        }
+
+        .bear-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 30px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+
+        /* ========== FALLING HEARTS ========== */
+        .heart {
+            position: fixed;
+            font-size: 20px;
+            color: rgba(255, 182, 193, 0.8);
+            pointer-events: none;
+            z-index: 9996;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ========== MUSIC VISUALIZER ========== */
+        .music-visualizer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: none;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 4px;
+            height: 50px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 9998;
+            transition: all 0.3s ease;
+        }
+
+        .music-visualizer.show {
+            display: flex;
+        }
+
+        .music-visualizer:hover {
+            transform: scale(1.05);
+        }
+
+        .visualizer-bar {
+            width: 4px;
+            background: linear-gradient(to top, #8b7355, #c9a88a);
+            border-radius: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .music-icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+            color: #2d3436;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 20px;
@@ -281,6 +430,27 @@
             .quote-box {
                 padding: 25px 20px;
                 font-size: 1em;
+            }
+
+            .floating-bear {
+                width: 70px;
+                height: 70px;
+                font-size: 2em;
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .bear-speech {
+                bottom: 90px;
+                right: 15px;
+                font-size: 0.85em;
+                max-width: 180px;
+            }
+
+            .music-visualizer {
+                bottom: 15px;
+                left: 15px;
+                height: 45px;
             }
         }
 
@@ -343,6 +513,25 @@
                 font-size: 0.95em;
                 margin: 25px 0;
             }
+
+            .floating-bear {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8em;
+            }
+
+            .bear-speech {
+                font-size: 0.8em;
+                max-width: 150px;
+            }
+
+            .music-visualizer {
+                height: 40px;
+            }
+
+            .visualizer-bar {
+                width: 3px;
+            }
         }
     </style>
 </head>
@@ -371,7 +560,7 @@
             <p class="message">Sebelumnya aku mau minta maaf kalau selama ini aku mengganggu atau membuat kamu merasa tidak nyaman.</p>
             <p class="message">Sejak aku bertemu kamu, aku merasa ada yang berbeda. Senyumanmu yang manis dan wajahmu yang imut selalu membuatku tersenyum 😊</p>
             <p class="message">Minggu ini adalah hari terakhirku di sini. Terima kasih sudah menjadi temanku, meskipun hanya sebentar.</p>
-            <p class="message">Sebenarnya aku ingin lebih sering mengobrol atau chat denganmu. Tapi mungkin aku agak grogi dan bingung harus membahas apa. Ini juga pertama kalinya aku ngobrol dengan seseorang seintens ini selain membahas tugas 😅</p>
+            <p class="message">Sebenarnya aku ingin lebih sering mengobrol atau chat denganmu. Tapi mungkin aku agak grogi dan bingung harus membahas apa. Ini juga pertama kalinya aku ngobrol dengan seseorang sedekat ini selain membahas tugas 😅</p>
             <p class="message">Sejak yang kamu katakan kemarin, aku jadi bingung dan agak sedih juga. Tapi tidak apa-apa, ini menjadi pengalaman berharga untukku. Padahal aku sempat ingin mengajakmu jalan. Tapi kalau kamu berubah pikiran, chat aku saja ya. Aku tidak akan memaksamu, keputusan ada di tanganmu.</p>
         </div>
 
@@ -393,6 +582,20 @@
         </div>
     </div>
 
+    <!-- Floating Bear -->
+    <div class="floating-bear" id="floatingBear">🧸</div>
+    <div class="bear-speech" id="bearSpeech"></div>
+
+    <!-- Music Visualizer -->
+    <div class="music-visualizer" id="musicVisualizer">
+        <span class="music-icon">🎵</span>
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+        <div class="visualizer-bar"></div>
+    </div>
+
     <!-- Audio Player -->
     <audio id="audioPlayer" loop></audio>
 
@@ -404,7 +607,15 @@
             musicURL: 'INDAHNYA DIRIMu - HIVI  lirik lagu.mp3',
             musicVolume: 0.4,
             envelopeOpenDelay: 1000,
-            contentShowDelay: 300
+            contentShowDelay: 300,
+            heartInterval: 2000,
+            bearMessages: [
+                "Halo dari Ais! 🧸",
+                "Jaga Wawa ya! 💕",
+                "Aku teman barumu!",
+                "Semangat Wawa! ✨",
+                "Kamu hebat! 🌟"
+            ]
         };
 
         // ============================================
@@ -414,8 +625,18 @@
             audioPlayer: document.getElementById('audioPlayer'),
             envelopeWrapper: document.getElementById('envelopeWrapper'),
             envelope: document.getElementById('envelope'),
-            mainContent: document.getElementById('mainContent')
+            mainContent: document.getElementById('mainContent'),
+            floatingBear: document.getElementById('floatingBear'),
+            bearSpeech: document.getElementById('bearSpeech'),
+            musicVisualizer: document.getElementById('musicVisualizer')
         };
+
+        // ============================================
+        // STATE
+        // ============================================
+        let isPlaying = false;
+        let heartInterval = null;
+        let visualizerInterval = null;
 
         // ============================================
         // AUDIO SETUP
@@ -429,26 +650,21 @@
         // ENVELOPE ANIMATION
         // ============================================
         function openEnvelope() {
-            // Cek jika amplop sudah terbuka
             if (elements.envelope.classList.contains('open')) {
                 return;
             }
             
-            // Buka amplop
             elements.envelope.classList.add('open');
             elements.envelope.style.cursor = 'default';
             
-            // Delay untuk animasi amplop
             setTimeout(() => {
-                // Play music
                 playBackgroundMusic();
-                
-                // Sembunyikan amplop
                 elements.envelopeWrapper.classList.add('hide');
                 
-                // Tampilkan konten utama
                 setTimeout(() => {
                     elements.mainContent.classList.add('show');
+                    showInteractiveElements();
+                    startFallingHearts();
                 }, CONFIG.contentShowDelay);
             }, CONFIG.envelopeOpenDelay);
         }
@@ -457,20 +673,104 @@
         // MUSIC PLAYER
         // ============================================
         function playBackgroundMusic() {
-            elements.audioPlayer.play().catch(error => {
-                console.log('Autoplay prevented by browser:', error);
-                console.log('User interaction required to play audio.');
+            elements.audioPlayer.play().then(() => {
+                isPlaying = true;
+                startVisualizer();
+            }).catch(error => {
+                console.log('Autoplay prevented:', error);
             });
+        }
+
+        function toggleMusic() {
+            if (isPlaying) {
+                elements.audioPlayer.pause();
+                isPlaying = false;
+                stopVisualizer();
+            } else {
+                elements.audioPlayer.play();
+                isPlaying = true;
+                startVisualizer();
+            }
+        }
+
+        // ============================================
+        // MUSIC VISUALIZER
+        // ============================================
+        function startVisualizer() {
+            const bars = elements.musicVisualizer.querySelectorAll('.visualizer-bar');
+            
+            visualizerInterval = setInterval(() => {
+                bars.forEach(bar => {
+                    const height = Math.random() * 30 + 10;
+                    bar.style.height = height + 'px';
+                });
+            }, 100);
+        }
+
+        function stopVisualizer() {
+            if (visualizerInterval) {
+                clearInterval(visualizerInterval);
+                const bars = elements.musicVisualizer.querySelectorAll('.visualizer-bar');
+                bars.forEach(bar => {
+                    bar.style.height = '10px';
+                });
+            }
+        }
+
+        // ============================================
+        // FLOATING BEAR
+        // ============================================
+        function showInteractiveElements() {
+            elements.floatingBear.classList.add('show');
+            elements.musicVisualizer.classList.add('show');
+        }
+
+        function showBearMessage() {
+            const randomMessage = CONFIG.bearMessages[Math.floor(Math.random() * CONFIG.bearMessages.length)];
+            elements.bearSpeech.textContent = randomMessage;
+            elements.bearSpeech.classList.add('show');
+            
+            setTimeout(() => {
+                elements.bearSpeech.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============================================
+        // FALLING HEARTS
+        // ============================================
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '💖';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+
+        function startFallingHearts() {
+            createHeart();
+            heartInterval = setInterval(createHeart, CONFIG.heartInterval);
+        }
+
+        function stopFallingHearts() {
+            if (heartInterval) {
+                clearInterval(heartInterval);
+            }
         }
 
         // ============================================
         // EVENT LISTENERS
         // ============================================
         function setupEventListeners() {
-            // Klik amplop untuk membuka
             elements.envelope.addEventListener('click', openEnvelope);
+            elements.floatingBear.addEventListener('click', showBearMessage);
+            elements.musicVisualizer.addEventListener('click', toggleMusic);
             
-            // Optional: Tekan Enter atau Space untuk membuka
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                     if (!elements.envelope.classList.contains('open')) {
@@ -489,7 +789,6 @@
             console.log('Application initialized successfully');
         }
 
-        // Jalankan saat halaman selesai dimuat
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
@@ -498,8 +797,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
