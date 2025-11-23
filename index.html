@@ -282,62 +282,66 @@
         }
 
         .bear-speech {
-            position: absolute;
-            bottom: 100px;
+            position: fixed;
+            bottom: 110px;
             right: 20px;
             background: white;
-            padding: 15px 20px;
-            border-radius: 20px;
+            padding: 12px 18px;
+            border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            font-size: 0.9em;
+            font-size: 0.85em;
             font-family: 'Georgia', serif;
             color: #2d3436;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 9997;
-            max-width: 200px;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            max-width: 180px;
+            text-align: center;
+            transform: translateY(10px);
         }
 
         .bear-speech.show {
             opacity: 1;
+            transform: translateY(0);
         }
 
         .bear-speech::after {
             content: '';
             position: absolute;
-            bottom: -10px;
-            right: 30px;
+            bottom: -8px;
+            right: 25px;
             width: 0;
             height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 10px solid white;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
         }
 
         /* ========== FALLING HEARTS ========== */
         .heart {
             position: fixed;
-            font-size: 20px;
-            color: rgba(255, 182, 193, 0.8);
+            font-size: 25px;
+            color: #ff69b4;
             pointer-events: none;
-            z-index: 9996;
+            z-index: 1;
             animation: fall linear forwards;
+            user-select: none;
         }
 
         @keyframes fall {
             0% {
-                transform: translateY(-10vh) rotate(0deg);
+                transform: translateY(-50px) rotate(0deg);
                 opacity: 0;
             }
-            10% {
-                opacity: 1;
+            5% {
+                opacity: 0.8;
             }
-            90% {
-                opacity: 1;
+            95% {
+                opacity: 0.8;
             }
             100% {
-                transform: translateY(110vh) rotate(360deg);
+                transform: translateY(calc(100vh + 50px)) rotate(360deg);
                 opacity: 0;
             }
         }
@@ -441,10 +445,15 @@
             }
 
             .bear-speech {
-                bottom: 90px;
+                bottom: 85px;
                 right: 15px;
-                font-size: 0.85em;
-                max-width: 180px;
+                font-size: 0.8em;
+                max-width: 160px;
+                padding: 10px 15px;
+            }
+
+            .bear-speech::after {
+                right: 20px;
             }
 
             .music-visualizer {
@@ -521,8 +530,18 @@
             }
 
             .bear-speech {
-                font-size: 0.8em;
-                max-width: 150px;
+                font-size: 0.75em;
+                max-width: 140px;
+                padding: 8px 12px;
+                bottom: 75px;
+            }
+
+            .bear-speech::after {
+                right: 15px;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-top: 6px solid white;
+                bottom: -6px;
             }
 
             .music-visualizer {
@@ -611,7 +630,6 @@
             heartInterval: 2000,
             bearMessages: [
                 "Halo dari Ais! 🧸",
-                "Jaga Wawa ya! 💕",
                 "Aku teman barumu!",
                 "Semangat Wawa! ✨",
                 "Kamu hebat! 🌟"
@@ -741,20 +759,40 @@
         function createHeart() {
             const heart = document.createElement('div');
             heart.className = 'heart';
-            heart.textContent = '💖';
+            
+            // Random heart emoji
+            const heartEmojis = ['💖', '💕', '💗', '💓', '💝'];
+            heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            
+            // Random horizontal position
             heart.style.left = Math.random() * 100 + '%';
-            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            
+            // Random animation duration (4-7 seconds)
+            const duration = Math.random() * 3 + 4;
+            heart.style.animationDuration = duration + 's';
+            
+            // Random size
+            const size = Math.random() * 10 + 20;
+            heart.style.fontSize = size + 'px';
             
             document.body.appendChild(heart);
             
+            // Remove after animation completes
             setTimeout(() => {
-                heart.remove();
-            }, 7000);
+                if (heart.parentNode) {
+                    heart.remove();
+                }
+            }, duration * 1000);
         }
 
         function startFallingHearts() {
+            // Create first heart immediately
             createHeart();
-            heartInterval = setInterval(createHeart, CONFIG.heartInterval);
+            
+            // Then create hearts at intervals
+            heartInterval = setInterval(() => {
+                createHeart();
+            }, CONFIG.heartInterval);
         }
 
         function stopFallingHearts() {
