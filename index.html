@@ -239,10 +239,10 @@
         /* ========== FLOATING BONEKA AIS ========== */
         .floating-bear {
             position: fixed;
-            bottom: 20px;
+            bottom: 90px;
             right: 20px;
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             background: #8b7355;
             border-radius: 50%;
             cursor: pointer;
@@ -251,7 +251,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 2.5em;
+            font-size: 3em;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             animation: floatBear 3s ease-in-out infinite;
@@ -265,8 +265,12 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        .floating-bear:active {
-            animation: jump 0.5s ease;
+        .floating-bear.eating {
+            animation: eatAnimation 0.5s ease;
+        }
+
+        .floating-bear.happy {
+            animation: happyJump 0.6s ease;
         }
 
         @keyframes floatBear {
@@ -274,29 +278,36 @@
             50% { transform: translateY(-10px); }
         }
 
-        @keyframes jump {
+        @keyframes eatAnimation {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.15) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+            75% { transform: scale(1.15) rotate(-5deg); }
+        }
+
+        @keyframes happyJump {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-30px) rotate(-10deg); }
+            25% { transform: translateY(-30px) rotate(-15deg); }
             50% { transform: translateY(-40px) rotate(0deg); }
-            75% { transform: translateY(-30px) rotate(10deg); }
+            75% { transform: translateY(-30px) rotate(15deg); }
         }
 
         .bear-speech {
             position: fixed;
-            bottom: 110px;
+            bottom: 200px;
             right: 20px;
             background: white;
-            padding: 12px 18px;
+            padding: 15px 20px;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            font-size: 0.85em;
+            font-size: 0.9em;
             font-family: 'Georgia', serif;
             color: #2d3436;
             opacity: 0;
             pointer-events: none;
             transition: all 0.3s ease;
             z-index: 9999;
-            max-width: 180px;
+            max-width: 200px;
             text-align: center;
             transform: translateY(10px);
         }
@@ -310,12 +321,221 @@
             content: '';
             position: absolute;
             bottom: -8px;
-            right: 25px;
+            right: 35px;
             width: 0;
             height: 0;
             border-left: 8px solid transparent;
             border-right: 8px solid transparent;
             border-top: 8px solid white;
+        }
+
+        /* ========== GAME BUTTON ========== */
+        .game-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #8b7355, #c9a88a);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 1em;
+            font-weight: 500;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Georgia', serif;
+        }
+
+        .game-button.show {
+            display: flex;
+        }
+
+        .game-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ========== GAME CONTAINER ========== */
+        .game-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .game-container.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+
+        .game-header h2 {
+            color: #2d3436;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .game-header p {
+            color: #636e72;
+            font-size: 0.9em;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f7f4;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #636e72;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #2d3436;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(to bottom, #e8f4f8, #f8f7f4);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 3px dashed #c9a88a;
+        }
+
+        .game-bear {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4em;
+            cursor: default;
+            transition: all 0.3s ease;
+        }
+
+        .game-bear.eating {
+            animation: gameEatAnimation 0.5s ease;
+        }
+
+        @keyframes gameEatAnimation {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.2); }
+        }
+
+        .food-item {
+            position: absolute;
+            font-size: 2.5em;
+            cursor: grab;
+            transition: all 0.2s ease;
+            animation: foodAppear 0.5s ease;
+            user-select: none;
+        }
+
+        .food-item:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .food-item.dragging {
+            cursor: grabbing;
+            opacity: 0.7;
+            transform: scale(1.3);
+        }
+
+        @keyframes foodAppear {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .game-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-family: 'Georgia', serif;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .game-btn.primary {
+            background: linear-gradient(135deg, #8b7355, #c9a88a);
+            color: white;
+        }
+
+        .game-btn.secondary {
+            background: #e0e0e0;
+            color: #2d3436;
+        }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-overlay.active {
+            opacity: 1;
+            pointer-events: all;
         }
 
         /* ========== FALLING HEARTS ========== */
@@ -386,170 +606,91 @@
             color: #2d3436;
         }
 
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            body {
-                padding: 20px;
-            }
-
-            .envelope {
-                width: 280px;
-                height: 175px;
-            }
-
-            .envelope-flap {
-                border-left: 140px solid transparent;
-                border-right: 140px solid transparent;
-                border-top: 87px solid #8b7355;
-            }
-
-            .envelope-letter {
-                width: 230px;
-                height: 140px;
-                padding: 25px;
-                left: 25px;
-                top: 27px;
-            }
-
-            .envelope-letter h3 {
-                font-size: 1.5em;
-            }
-
-            .container {
-                padding: 40px 30px;
-            }
-
-            h1 {
-                font-size: 1.8em;
-                letter-spacing: 2px;
-            }
-
-            .section h2 {
-                font-size: 1.2em;
-            }
-
-            .message {
-                font-size: 0.95em;
-            }
-
-            .quote-box {
-                padding: 25px 20px;
-                font-size: 1em;
-            }
-
             .floating-bear {
-                width: 70px;
-                height: 70px;
-                font-size: 2em;
-                bottom: 15px;
+                width: 90px;
+                height: 90px;
+                font-size: 2.8em;
+                bottom: 80px;
                 right: 15px;
             }
 
             .bear-speech {
-                bottom: 85px;
+                bottom: 180px;
                 right: 15px;
-                font-size: 0.8em;
-                max-width: 160px;
-                padding: 10px 15px;
+                max-width: 180px;
+                font-size: 0.85em;
             }
 
-            .bear-speech::after {
-                right: 20px;
+            .game-container {
+                padding: 20px;
             }
 
-            .music-visualizer {
-                bottom: 15px;
-                left: 15px;
-                height: 45px;
+            .game-area {
+                height: 250px;
+            }
+
+            .game-bear {
+                font-size: 3em;
+            }
+
+            .food-item {
+                font-size: 2em;
+            }
+
+            .game-button {
+                top: 15px;
+                right: 15px;
+                padding: 10px 20px;
+                font-size: 0.9em;
             }
         }
 
         @media (max-width: 480px) {
-            .envelope {
-                width: 240px;
-                height: 150px;
-            }
-
-            .envelope-flap {
-                border-left: 120px solid transparent;
-                border-right: 120px solid transparent;
-                border-top: 75px solid #8b7355;
-            }
-
-            .envelope-letter {
-                width: 190px;
-                height: 120px;
-                padding: 20px;
-                left: 25px;
-                top: 25px;
-            }
-
-            .envelope-letter h3 {
-                font-size: 1.3em;
-                margin-bottom: 10px;
-            }
-
-            .envelope-letter p {
-                font-size: 0.85em;
-            }
-
-            .container {
-                padding: 35px 25px;
-            }
-
-            h1 {
-                font-size: 1.5em;
-                letter-spacing: 1px;
-                padding-bottom: 15px;
-            }
-
-            .subtitle {
-                font-size: 0.9em;
-                margin-bottom: 30px;
-            }
-
-            .section h2 {
-                font-size: 1.1em;
-                margin-bottom: 15px;
-            }
-
-            .message {
-                font-size: 0.9em;
-                line-height: 1.8;
-            }
-
-            .quote-box {
-                padding: 20px 15px;
-                font-size: 0.95em;
-                margin: 25px 0;
-            }
-
             .floating-bear {
-                width: 60px;
-                height: 60px;
-                font-size: 1.8em;
+                width: 75px;
+                height: 75px;
+                font-size: 2.3em;
+                bottom: 70px;
+                right: 15px;
             }
 
             .bear-speech {
-                font-size: 0.75em;
-                max-width: 140px;
-                padding: 8px 12px;
-                bottom: 75px;
+                max-width: 160px;
+                font-size: 0.8em;
+                bottom: 155px;
+                right: 15px;
+                padding: 12px 16px;
             }
 
             .bear-speech::after {
-                right: 15px;
-                border-left: 6px solid transparent;
-                border-right: 6px solid transparent;
-                border-top: 6px solid white;
-                bottom: -6px;
+                right: 25px;
             }
 
-            .music-visualizer {
-                height: 40px;
+            .game-container {
+                padding: 15px;
             }
 
-            .visualizer-bar {
-                width: 3px;
+            .game-header h2 {
+                font-size: 1.5em;
+            }
+
+            .game-area {
+                height: 200px;
+            }
+
+            .game-bear {
+                font-size: 2.5em;
+            }
+
+            .food-item {
+                font-size: 1.8em;
+            }
+
+            .game-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
             }
         }
     </style>
@@ -579,7 +720,7 @@
             <p class="message">Sebelumnya aku mau minta maaf kalau selama ini aku mengganggu atau membuat kamu merasa tidak nyaman.</p>
             <p class="message">Sejak aku bertemu kamu, aku merasa ada yang berbeda. Senyumanmu yang manis dan wajahmu yang imut selalu membuatku tersenyum 😊</p>
             <p class="message">Minggu ini adalah hari terakhirku di sini. Terima kasih sudah menjadi temanku, meskipun hanya sebentar.</p>
-            <p class="message">Sebenarnya aku ingin lebih sering mengobrol atau chat denganmu. Tapi mungkin aku agak grogi dan bingung harus membahas apa. Ini juga pertama kalinya aku ngobrol dengan seseorang sedekat ini.</p>
+            <p class="message">Sebenarnya aku ingin lebih sering mengobrol atau chat denganmu. Tapi mungkin aku agak grogi dan bingung harus membahas apa. Ini juga pertama kalinya aku ngobrol dengan seseorang sedekat ini 😅</p>
             <p class="message">Sejak yang kamu katakan kemarin, aku jadi bingung dan agak sedih juga. Tapi tidak apa-apa, ini menjadi pengalaman berharga untukku. Padahal aku sempat ingin mengajakmu jalan. Tapi kalau kamu berubah pikiran, chat aku saja ya. Aku tidak akan memaksamu, keputusan ada di tanganmu.</p>
         </div>
 
@@ -598,6 +739,41 @@
             <p class="message">Jaga Ais dengan baik ya. Dia adalah simbol pertemanan kita. Tapi kalau kamu merasa tidak nyaman, tidak apa-apa untuk memberikannya pada orang lain, yang penting jangan mengembalikannya kepadaku lagi. Tapi mungkin jika kamu menyimpan Ais dengan baik, itu akan membuat aku senang.</p>
             <p class="message">Nice to meet you.</p>
             <p class="message">I hope to see you again.</p> 
+        </div>
+    </div>
+
+    <!-- Game Button -->
+    <button class="game-button" id="gameButton">
+        🎮 Main dengan Ais
+    </button>
+
+    <!-- Game Overlay -->
+    <div class="game-overlay" id="gameOverlay"></div>
+
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer">
+        <div class="game-header">
+            <h2>🧸 Feed Ais the Bear</h2>
+            <p>Drag makanan ke Ais untuk memberi makan!</p>
+        </div>
+
+        <div class="game-stats">
+            <div class="stat-item">
+                <div class="stat-label">Makanan</div>
+                <div class="stat-value" id="foodCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Kebahagiaan</div>
+                <div class="stat-value" id="happinessLevel">😊</div>
+            </div>
+        </div>
+
+        <div class="game-area" id="gameArea">
+            <div class="game-bear" id="gameBear">🧸</div>
+        </div>
+
+        <div class="game-controls">
+            <button class="game-btn secondary" id="closeGameBtn">Tutup</button>
         </div>
     </div>
 
@@ -633,6 +809,14 @@
                 "Aku teman barumu!",
                 "Semangat Wawa! ✨",
                 "Kamu hebat! 🌟"
+            ],
+            foodEmojis: ['🍎', '🍌', '🍓', '🍪', '🍰', '🍩', '🧁', '🍕', '🍔', '🌮'],
+            happyMessages: [
+                "Thank you! 💕",
+                "Yummy! 😋",
+                "Enak sekali! ✨",
+                "Aku suka! 🌟",
+                "Terima kasih! 💖"
             ]
         };
 
@@ -646,15 +830,30 @@
             mainContent: document.getElementById('mainContent'),
             floatingBear: document.getElementById('floatingBear'),
             bearSpeech: document.getElementById('bearSpeech'),
-            musicVisualizer: document.getElementById('musicVisualizer')
+            musicVisualizer: document.getElementById('musicVisualizer'),
+            gameButton: document.getElementById('gameButton'),
+            gameOverlay: document.getElementById('gameOverlay'),
+            gameContainer: document.getElementById('gameContainer'),
+            gameArea: document.getElementById('gameArea'),
+            gameBear: document.getElementById('gameBear'),
+            foodCount: document.getElementById('foodCount'),
+            happinessLevel: document.getElementById('happinessLevel'),
+            closeGameBtn: document.getElementById('closeGameBtn')
         };
 
         // ============================================
         // STATE
         // ============================================
-        let isPlaying = false;
-        let heartInterval = null;
-        let visualizerInterval = null;
+        const state = {
+            isPlaying: false,
+            heartInterval: null,
+            visualizerInterval: null,
+            foodFedCount: 0,
+            currentFood: null,
+            draggedElement: null,
+            gameActive: false,
+            foodSpawnInterval: null
+        };
 
         // ============================================
         // AUDIO SETUP
@@ -692,7 +891,7 @@
         // ============================================
         function playBackgroundMusic() {
             elements.audioPlayer.play().then(() => {
-                isPlaying = true;
+                state.isPlaying = true;
                 startVisualizer();
             }).catch(error => {
                 console.log('Autoplay prevented:', error);
@@ -700,13 +899,13 @@
         }
 
         function toggleMusic() {
-            if (isPlaying) {
+            if (state.isPlaying) {
                 elements.audioPlayer.pause();
-                isPlaying = false;
+                state.isPlaying = false;
                 stopVisualizer();
             } else {
                 elements.audioPlayer.play();
-                isPlaying = true;
+                state.isPlaying = true;
                 startVisualizer();
             }
         }
@@ -717,7 +916,7 @@
         function startVisualizer() {
             const bars = elements.musicVisualizer.querySelectorAll('.visualizer-bar');
             
-            visualizerInterval = setInterval(() => {
+            state.visualizerInterval = setInterval(() => {
                 bars.forEach(bar => {
                     const height = Math.random() * 30 + 10;
                     bar.style.height = height + 'px';
@@ -726,8 +925,8 @@
         }
 
         function stopVisualizer() {
-            if (visualizerInterval) {
-                clearInterval(visualizerInterval);
+            if (state.visualizerInterval) {
+                clearInterval(state.visualizerInterval);
                 const bars = elements.musicVisualizer.querySelectorAll('.visualizer-bar');
                 bars.forEach(bar => {
                     bar.style.height = '10px';
@@ -741,10 +940,11 @@
         function showInteractiveElements() {
             elements.floatingBear.classList.add('show');
             elements.musicVisualizer.classList.add('show');
+            elements.gameButton.classList.add('show');
         }
 
-        function showBearMessage() {
-            const randomMessage = CONFIG.bearMessages[Math.floor(Math.random() * CONFIG.bearMessages.length)];
+        function showBearMessage(message = null) {
+            const randomMessage = message || CONFIG.bearMessages[Math.floor(Math.random() * CONFIG.bearMessages.length)];
             elements.bearSpeech.textContent = randomMessage;
             elements.bearSpeech.classList.add('show');
             
@@ -760,24 +960,19 @@
             const heart = document.createElement('div');
             heart.className = 'heart';
             
-            // Random heart emoji
             const heartEmojis = ['💖', '💕', '💗', '💓', '💝'];
             heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
             
-            // Random horizontal position
             heart.style.left = Math.random() * 100 + '%';
             
-            // Random animation duration (4-7 seconds)
             const duration = Math.random() * 3 + 4;
             heart.style.animationDuration = duration + 's';
             
-            // Random size
             const size = Math.random() * 10 + 20;
             heart.style.fontSize = size + 'px';
             
             document.body.appendChild(heart);
             
-            // Remove after animation completes
             setTimeout(() => {
                 if (heart.parentNode) {
                     heart.remove();
@@ -786,34 +981,203 @@
         }
 
         function startFallingHearts() {
-            // Create first heart immediately
             createHeart();
             
-            // Then create hearts at intervals
-            heartInterval = setInterval(() => {
+            state.heartInterval = setInterval(() => {
                 createHeart();
             }, CONFIG.heartInterval);
         }
 
-        function stopFallingHearts() {
-            if (heartInterval) {
-                clearInterval(heartInterval);
+        // ============================================
+        // GAME FUNCTIONS
+        // ============================================
+        function openGame() {
+            state.gameActive = true;
+            elements.gameOverlay.classList.add('active');
+            elements.gameContainer.classList.add('active');
+            
+            // Spawn initial food
+            spawnFood();
+            
+            // Start auto-spawning food every 3 seconds
+            state.foodSpawnInterval = setInterval(() => {
+                if (state.gameActive) {
+                    createFoodItem();
+                }
+            }, 3000);
+        }
+
+        function closeGame() {
+            state.gameActive = false;
+            elements.gameOverlay.classList.remove('active');
+            elements.gameContainer.classList.remove('active');
+            
+            // Stop auto-spawning
+            if (state.foodSpawnInterval) {
+                clearInterval(state.foodSpawnInterval);
+                state.foodSpawnInterval = null;
             }
+            
+            // Clear all food items
+            const foods = elements.gameArea.querySelectorAll('.food-item');
+            foods.forEach(food => food.remove());
+        }
+
+        function spawnFood() {
+            // Create 3-5 initial food items
+            const foodCount = Math.floor(Math.random() * 3) + 3;
+            
+            for (let i = 0; i < foodCount; i++) {
+                setTimeout(() => {
+                    createFoodItem();
+                }, i * 200);
+            }
+        }
+
+        function createFoodItem() {
+            const food = document.createElement('div');
+            food.className = 'food-item';
+            food.textContent = CONFIG.foodEmojis[Math.floor(Math.random() * CONFIG.foodEmojis.length)];
+            
+            // Random position (avoiding edges and bear area)
+            const maxX = elements.gameArea.offsetWidth - 60;
+            const maxY = elements.gameArea.offsetHeight - 120; // Avoid bear area
+            
+            food.style.left = Math.random() * maxX + 'px';
+            food.style.top = Math.random() * maxY + 'px';
+            
+            // Add drag events
+            food.addEventListener('mousedown', startDrag);
+            food.addEventListener('touchstart', startDrag);
+            
+            elements.gameArea.appendChild(food);
+        }
+
+        function startDrag(e) {
+            e.preventDefault();
+            state.draggedElement = e.target;
+            state.draggedElement.classList.add('dragging');
+            
+            const moveHandler = (e) => {
+                const touch = e.touches ? e.touches[0] : e;
+                const rect = elements.gameArea.getBoundingClientRect();
+                
+                let x = touch.clientX - rect.left - 30;
+                let y = touch.clientY - rect.top - 30;
+                
+                // Keep within bounds
+                x = Math.max(0, Math.min(x, rect.width - 60));
+                y = Math.max(0, Math.min(y, rect.height - 60));
+                
+                state.draggedElement.style.left = x + 'px';
+                state.draggedElement.style.top = y + 'px';
+            };
+            
+            const endHandler = (e) => {
+                if (state.draggedElement) {
+                    checkFeedBear();
+                    state.draggedElement.classList.remove('dragging');
+                    state.draggedElement = null;
+                }
+                
+                document.removeEventListener('mousemove', moveHandler);
+                document.removeEventListener('touchmove', moveHandler);
+                document.removeEventListener('mouseup', endHandler);
+                document.removeEventListener('touchend', endHandler);
+            };
+            
+            document.addEventListener('mousemove', moveHandler);
+            document.addEventListener('touchmove', moveHandler);
+            document.addEventListener('mouseup', endHandler);
+            document.addEventListener('touchend', endHandler);
+        }
+
+        function checkFeedBear() {
+            if (!state.draggedElement) return;
+            
+            const foodRect = state.draggedElement.getBoundingClientRect();
+            const bearRect = elements.gameBear.getBoundingClientRect();
+            
+            // Check collision
+            const isColliding = !(
+                foodRect.right < bearRect.left ||
+                foodRect.left > bearRect.right ||
+                foodRect.bottom < bearRect.top ||
+                foodRect.top > bearRect.bottom
+            );
+            
+            if (isColliding) {
+                feedBear(state.draggedElement);
+            }
+        }
+
+        function feedBear(foodElement) {
+            // Increment counter
+            state.foodFedCount++;
+            elements.foodCount.textContent = state.foodFedCount;
+            
+            // Update happiness level
+            updateHappiness();
+            
+            // Animate bear eating
+            elements.gameBear.classList.add('eating');
+            setTimeout(() => {
+                elements.gameBear.classList.remove('eating');
+            }, 500);
+            
+            // Show thank you message
+            const message = CONFIG.happyMessages[Math.floor(Math.random() * CONFIG.happyMessages.length)];
+            showBearMessage(message);
+            
+            // Animate floating bear too
+            elements.floatingBear.classList.add('happy');
+            setTimeout(() => {
+                elements.floatingBear.classList.remove('happy');
+            }, 600);
+            
+            // Remove food with animation
+            foodElement.style.transition = 'all 0.3s ease';
+            foodElement.style.transform = 'scale(0) rotate(180deg)';
+            foodElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                foodElement.remove();
+            }, 300);
+        }
+
+        function updateHappiness() {
+            const levels = ['😊', '😄', '🥰', '😍', '🤩'];
+            let index = Math.min(Math.floor(state.foodFedCount / 3), levels.length - 1);
+            elements.happinessLevel.textContent = levels[index];
         }
 
         // ============================================
         // EVENT LISTENERS
         // ============================================
         function setupEventListeners() {
+            // Envelope
             elements.envelope.addEventListener('click', openEnvelope);
-            elements.floatingBear.addEventListener('click', showBearMessage);
+            
+            // Floating bear
+            elements.floatingBear.addEventListener('click', () => showBearMessage());
+            
+            // Music visualizer
             elements.musicVisualizer.addEventListener('click', toggleMusic);
             
+            // Game controls
+            elements.gameButton.addEventListener('click', openGame);
+            elements.closeGameBtn.addEventListener('click', closeGame);
+            elements.gameOverlay.addEventListener('click', closeGame);
+            
+            // Keyboard shortcuts
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                     if (!elements.envelope.classList.contains('open')) {
                         openEnvelope();
                     }
+                }
+                if (event.key === 'Escape' && state.gameActive) {
+                    closeGame();
                 }
             });
         }
@@ -824,7 +1188,7 @@
         function init() {
             initializeAudio();
             setupEventListeners();
-            console.log('Application initialized successfully');
+            console.log('🧸 Application initialized - Feed Ais game ready!');
         }
 
         if (document.readyState === 'loading') {
@@ -835,4 +1199,3 @@
     </script>
 </body>
 </html>
-
